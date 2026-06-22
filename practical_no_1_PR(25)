@@ -1,0 +1,304 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMkH6G7790bL2vSSW0d2IzR",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Gautamkhushboo/Pattern-Recognition-Lab-/blob/main/practical_no_1_PR(25)\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np\n",
+        "from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances, manhattan_distances"
+      ],
+      "metadata": {
+        "id": "0FVP-niyD0e7"
+      },
+      "execution_count": 2,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "customers = {\n",
+        "    \"C1\": [5000, 5, 4, 30],\n",
+        "    \"C2\": [5200, 6, 5, 35],\n",
+        "    \"C3\": [2000, 2, 3, 10]\n",
+        "}\n",
+        "\n",
+        "data = np.array(list(customers.values()))\n",
+        "names = list(customers.keys())\n",
+        "\n",
+        "print(\"Customer Data:\\n\", data)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "SEv4UyI6D2li",
+        "outputId": "4f7113de-b3a3-475c-954f-da65201278bf"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Customer Data:\n",
+            " [[5000    5    4   30]\n",
+            " [5200    6    5   35]\n",
+            " [2000    2    3   10]]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "euclidean = euclidean_distances(data)\n",
+        "\n",
+        "print(\"Euclidean Distance:\\n\")\n",
+        "print(euclidean)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "D6XDyYfQD4gS",
+        "outputId": "a3eb78e2-3211-4f59-da2b-6f566bcf4a30"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Euclidean Distance:\n",
+            "\n",
+            "[[   0.          200.06748861 3000.06833256]\n",
+            " [ 200.06748861    0.         3200.10077966]\n",
+            " [3000.06833256 3200.10077966    0.        ]]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.metrics import pairwise_distances\n",
+        "\n",
+        "manhattan = pairwise_distances(data, metric='manhattan')\n",
+        "\n",
+        "print(\"Manhattan Distance:\\n\")\n",
+        "print(manhattan)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "1212Nx0wD6aq",
+        "outputId": "9bfcc59c-9682-441b-af6b-2fcd27a0c973"
+      },
+      "execution_count": 5,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Manhattan Distance:\n",
+            "\n",
+            "[[   0.  207. 3024.]\n",
+            " [ 207.    0. 3231.]\n",
+            " [3024. 3231.    0.]]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cosine = cosine_similarity(data)\n",
+        "\n",
+        "print(\"Cosine Similarity:\\n\")\n",
+        "print(cosine)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "p3qEu5d0D8Z7",
+        "outputId": "c6e32109-1515-44e4-b42c-44bdadc184b9"
+      },
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Cosine Similarity:\n",
+            "\n",
+            "[[1.         0.99999971 0.99999926]\n",
+            " [0.99999971 1.         0.99999835]\n",
+            " [0.99999926 0.99999835 1.        ]]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def most_similar(sim_matrix, names):\n",
+        "    n = len(names)\n",
+        "    for i in range(n):\n",
+        "        best_score = -1\n",
+        "        best_match = None\n",
+        "\n",
+        "        for j in range(n):\n",
+        "            if i != j:\n",
+        "                if sim_matrix[i][j] > best_score:\n",
+        "                    best_score = sim_matrix[i][j]\n",
+        "                    best_match = names[j]\n",
+        "\n",
+        "        print(f\"{names[i]} → most similar to {best_match} (score: {best_score:.2f})\")"
+      ],
+      "metadata": {
+        "id": "iN-PTwNQD-dq"
+      },
+      "execution_count": 7,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "most_similar(cosine, names)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "GL5hkPyOEBG6",
+        "outputId": "fbfeb55c-e734-4a30-d662-599d03f63088"
+      },
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "C1 → most similar to C2 (score: 1.00)\n",
+            "C2 → most similar to C1 (score: 1.00)\n",
+            "C3 → most similar to C1 (score: 1.00)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pip install python-Levenshtein"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "KefBE6WoECyr",
+        "outputId": "77c19178-cc40-449b-b042-3babca26d437"
+      },
+      "execution_count": 9,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Collecting python-Levenshtein\n",
+            "  Downloading python_levenshtein-0.27.3-py3-none-any.whl.metadata (3.9 kB)\n",
+            "Collecting Levenshtein==0.27.3 (from python-Levenshtein)\n",
+            "  Downloading levenshtein-0.27.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.7 kB)\n",
+            "Collecting rapidfuzz<4.0.0,>=3.9.0 (from Levenshtein==0.27.3->python-Levenshtein)\n",
+            "  Downloading rapidfuzz-3.14.5-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (12 kB)\n",
+            "Downloading python_levenshtein-0.27.3-py3-none-any.whl (9.5 kB)\n",
+            "Downloading levenshtein-0.27.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (153 kB)\n",
+            "\u001b[2K   \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m153.3/153.3 kB\u001b[0m \u001b[31m5.2 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25hDownloading rapidfuzz-3.14.5-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (3.1 MB)\n",
+            "\u001b[2K   \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m3.1/3.1 MB\u001b[0m \u001b[31m33.8 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25hInstalling collected packages: rapidfuzz, Levenshtein, python-Levenshtein\n",
+            "Successfully installed Levenshtein-0.27.3 python-Levenshtein-0.27.3 rapidfuzz-3.14.5\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import Levenshtein"
+      ],
+      "metadata": {
+        "id": "NfswZ35WEHWK"
+      },
+      "execution_count": 10,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "sequences = {\n",
+        "    \"C1\": \"ELECTRONICS BOOKS FASHION\",\n",
+        "    \"C2\": \"ELECTRONICS BOOKS FASHION\",\n",
+        "    \"C3\": \"GROCERY FOOD UTILITIES\"\n",
+        "}\n",
+        "\n",
+        "seq_names = list(sequences.keys())\n",
+        "seq_values = list(sequences.values())\n",
+        "\n",
+        "for i in range(len(seq_values)):\n",
+        "    for j in range(len(seq_values)):\n",
+        "        if i != j:\n",
+        "            dist = Levenshtein.distance(seq_values[i], seq_values[j])\n",
+        "            print(f\"{seq_names[i]} - {seq_names[j]} = {dist}\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "n3rRhqABEXa6",
+        "outputId": "442bf61b-4e36-4d95-83e1-469f19b9e6c5"
+      },
+      "execution_count": 12,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "C1 - C2 = 0\n",
+            "C1 - C3 = 20\n",
+            "C2 - C1 = 0\n",
+            "C2 - C3 = 20\n",
+            "C3 - C1 = 20\n",
+            "C3 - C2 = 20\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
